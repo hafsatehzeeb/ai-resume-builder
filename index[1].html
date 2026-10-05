@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResumeAI — AI Resume Builder</title>
+<style>
+:root{--p:#635bff;--p2:#8b5cf6;--bg:#f6f7fb;--card:#fff;--text:#171923;--muted:#687083;--border:#e5e7ef;--good:#16a34a;--warn:#d97706}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
+nav{height:68px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:0;z-index:10}
+.logo{font-weight:800;font-size:21px}.logo span{color:var(--p)}
+nav button,.primary{border:0;border-radius:10px;padding:11px 18px;background:var(--p);color:#fff;font-weight:700;cursor:pointer}
+.hero{padding:55px 5% 30px;text-align:center;background:linear-gradient(135deg,#f1efff,#fff)}
+.hero h1{font-size:42px;margin:0 0 12px}.hero h1 span{color:var(--p)}.hero p{color:var(--muted);max-width:700px;margin:auto;line-height:1.6}
+.container{width:min(1200px,92%);margin:25px auto}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:20px}.tab{background:#fff;border:1px solid var(--border);padding:11px 16px;border-radius:10px;cursor:pointer;font-weight:700}.tab.active{background:var(--p);color:white;border-color:var(--p)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:0 4px 18px #1111}.card h2,.card h3{margin-top:0}
+label{font-size:13px;font-weight:700;display:block;margin:12px 0 6px}input,textarea,select{width:100%;padding:11px;border:1px solid #d9dce5;border-radius:9px;font:inherit;background:#fff}textarea{min-height:85px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.secondary{background:#fff;color:var(--text);border:1px solid var(--border);padding:10px 15px;border-radius:9px;font-weight:700;cursor:pointer}
+.hidden{display:none}.score{font-size:54px;font-weight:800;color:var(--p);text-align:center}.meter{height:12px;background:#e9eaf0;border-radius:99px;overflow:hidden}.meter div{height:100%;background:linear-gradient(90deg,var(--p),var(--p2));width:0}
+.tip{padding:12px;border-radius:10px;background:#f3f1ff;margin:8px 0}.good{color:var(--good)}.warn{color:var(--warn)}
+.preview{background:white;min-height:720px;padding:42px;box-shadow:0 4px 18px #1111;border-radius:4px;color:#222}.preview h1{margin:0;font-size:30px}.preview .contact{color:#666;font-size:13px;margin:6px 0 22px}.preview h2{font-size:15px;border-bottom:2px solid #222;padding-bottom:4px;margin-top:20px}.preview p,.preview li{font-size:13px;line-height:1.5}.preview ul{padding-left:20px}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{padding:18px;background:#fafafa;border:1px solid var(--border);border-radius:12px;text-align:center}.stat b{font-size:25px;display:block}.feature{padding:15px;border:1px solid var(--border);border-radius:12px;margin:8px 0}.feature b{display:block;margin-bottom:5px}
+footer{text-align:center;color:#777;padding:35px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.hero h1{font-size:31px}.row{grid-template-columns:1fr}.preview{padding:25px}}
+@media print{nav,.hero,.tabs,.formcard,.analysiscard,footer,.actions{display:none!important}.container{width:100%;margin:0}.preview{box-shadow:none}}
+</style>
+</head>
+<body>
+<nav><div class="logo">Resume<span>AI</span></div><button onclick="window.print()">Download / Print PDF</button></nav>
+<section class="hero">
+<h1>Build a <span>smarter resume</span> with AI</h1>
+<p>Create a professional ATS-friendly resume, analyze its strength, and match it against a job description — all in one place.</p>
+</section>
+
+<div class="container">
+<div class="tabs">
+<button class="tab active" onclick="showTab('builder',this)">1. Build Resume</button>
+<button class="tab" onclick="showTab('analyzer',this)">2. ATS Analyzer</button>
+<button class="tab" onclick="showTab('matcher',this)">3. Job Matcher</button>
+<button class="tab" onclick="showTab('about',this)">4. Project Features</button>
+</div>
+
+<section id="builder">
+<div class="grid">
+<div class="card formcard">
+<h2>Resume Information</h2>
+<div class="row"><div><label>Full Name</label><input id="name" placeholder="Hafsa Tehzeeb"></div><div><label>Role / Career Goal</label><input id="role" placeholder="BTech CSE Student"></div></div>
+<div class="row"><div><label>Email</label><input id="email" placeholder="you@example.com"></div><div><label>Phone</label><input id="phone" placeholder="+91 XXXXX XXXXX"></div></div>
+<label>Location</label><input id="location" placeholder="Chennai, India">
+<label>Professional Summary</label><textarea id="summary" placeholder="Write a short summary, or click AI Generate below."></textarea>
+<div class="actions"><button class="primary" onclick="generateSummary()">✨ AI Generate Summary</button></div>
+<label>Education</label><textarea id="education" placeholder="B.Tech CSE — SRM Institute of Science and Technology, 2025–2029"></textarea>
+<label>Skills</label><textarea id="skills" placeholder="C, C++, Java, Python, SQL, Data Structures, HTML, CSS"></textarea>
+<label>Projects</label><textarea id="projects" placeholder="AI Resume Builder — Built a web application for resume generation and ATS analysis."></textarea>
+<label>Experience / Internship</label><textarea id="experience" placeholder="Intern / club / freelance experience (if any)"></textarea>
+<label>Certifications & Achievements</label><textarea id="certs" placeholder="NPTEL, coding certifications, hackathons, achievements"></textarea>
+<label>Template</label><select id="template"><option>Modern</option><option>Classic</option><option>Minimal</option></select>
+<div class="actions"><button class="primary" onclick="updatePreview()">Update Resume</button><button class="secondary" onclick="clearAll()">Clear</button></div>
+</div>
+
+<div><div class="card"><h2>Live Resume Preview</h2><div id="preview" class="preview"></div></div></div>
+</div>
+</section>
+
+<section id="analyzer" class="hidden">
+<div class="grid">
+<div class="card"><h2>ATS Resume Analyzer</h2><p style="color:var(--muted)">Our rule-based AI checks common ATS factors such as contact details, keywords, measurable achievements, sections and readability.</p>
+<div class="score" id="atsScore">0</div><div class="meter"><div id="atsBar"></div></div><div id="analysisTips" style="margin-top:18px"></div>
+<button class="primary" onclick="analyze()">Analyze My Resume</button></div>
+<div class="card"><h2>ATS Checklist</h2><div class="feature">✓ Clear contact information</div><div class="feature">✓ Standard section headings</div><div class="feature">✓ Relevant technical keywords</div><div class="feature">✓ Quantifiable achievements</div><div class="feature">✓ Concise professional summary</div><div class="feature">✓ Simple, readable structure</div></div>
+</div>
+</section>
+
+<section id="matcher" class="hidden">
+<div class="grid">
+<div class="card"><h2>Job Description Matcher</h2><label>Paste Job Description</label><textarea id="job" style="min-height:330px" placeholder="Example: We are looking for a software engineering intern with Python, Java, SQL, Git, data structures and problem-solving skills..."></textarea>
+<button class="primary" onclick="matchJob()">🎯 Match Resume</button></div>
+<div class="card"><h2>Match Results</h2><div class="score" id="matchScore">0%</div><div class="meter"><div id="matchBar"></div></div><h3>Detected keywords</h3><div id="keywords"></div><h3>Suggestions</h3><div id="matchTips"></div></div>
+</div>
+</section>
+
+<section id="about" class="hidden">
+<div class="card"><h2>Project Modules</h2><div class="statgrid"><div class="stat"><b>4</b>Core Modules</div><div class="stat"><b>ATS</b>Analysis</div><div class="stat"><b>AI</b>Content Assist</div></div>
+<div class="feature"><b>1. Resume Builder</b>Collects structured student information and creates a professional resume preview.</div>
+<div class="feature"><b>2. AI Content Generator</b>Generates a polished summary from the user's career goal, skills and projects.</div>
+<div class="feature"><b>3. ATS Analyzer</b>Produces a score and actionable recommendations based on resume completeness and keywords.</div>
+<div class="feature"><b>4. Job Matcher</b>Compares resume keywords with a pasted job description and highlights missing skills.</div>
+<div class="feature"><b>5. PDF Export</b>Uses the browser print dialog to save the finished resume as PDF.</div>
+</div>
+</section>
+</div>
+<footer>ResumeAI • College Project Prototype • Built with HTML, CSS & JavaScript</footer>
+
+<script>
+const ids=['name','role','email','phone','location','summary','education','skills','projects','experience','certs'];
+function val(id){return document.getElementById(id).value.trim()}
+function showTab(id,btn){document.querySelectorAll('section[id]').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');if(id==='builder')updatePreview()}
+function generateSummary(){
+ let role=val('role')||'Computer Science student', skills=val('skills')||'programming and problem-solving', projects=val('projects')||'academic software projects';
+ document.getElementById('summary').value=`Motivated ${role} with hands-on experience in ${skills}. Interested in building practical software solutions and applying problem-solving skills through ${projects.split('.')[0]}. Eager to learn, collaborate and contribute to real-world technology projects.`;
+ updatePreview();
+}
+function updatePreview(){
+ const name=val('name')||'Your Name', role=val('role')||'Career Role';
+ const contact=[val('email'),val('phone'),val('location')].filter(Boolean).join(' • ');
+ function section(title,body){return body?`<h2>${title}</h2><p>${esc(body).replace(/\n/g,'<br>')}</p>`:''}
+ document.getElementById('preview').innerHTML=`<h1>${esc(name)}</h1><div class="contact">${esc(role)}${contact?' • '+esc(contact):''}</div>
+ ${section('PROFILE',val('summary'))}${section('EDUCATION',val('education'))}${section('SKILLS',val('skills'))}${section('PROJECTS',val('projects'))}${section('EXPERIENCE',val('experience'))}${section('CERTIFICATIONS & ACHIEVEMENTS',val('certs'))}`;
+}
+function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function resumeText(){return ids.map(i=>val(i)).join(' ')}
+function analyze(){
+ let t=resumeText().toLowerCase(), score=0,tips=[];
+ if(val('name'))score+=10;else tips.push('Add your full name.');
+ if(val('email')&&val('phone'))score+=10;else tips.push('Add both email and phone number.');
+ if(val('summary')&&val('summary').length>=80)score+=15;else tips.push('Add a stronger 2–4 line professional summary.');
+ if(val('education'))score+=10;else tips.push('Add education details.');
+ if(val('skills'))score+=15;else tips.push('Add relevant technical skills.');
+ if(val('projects'))score+=15;else tips.push('Add at least one project.');
+ if(val('experience'))score+=10;else tips.push('Add internship, club, freelance or relevant experience if available.');
+ if(/\b\d+%|\b\d+\+|\b\d+\s*(users|projects|days|months|hours|members)\b/i.test(t)){score+=5}else tips.push('Use measurable results where possible, e.g. “reduced time by 20%”.');
+ document.getElementById('atsScore').textContent=score;document.getElementById('atsBar').style.width=score+'%';
+ document.getElementById('analysisTips').innerHTML=tips.length?tips.map(x=>`<div class="tip warn">⚠ ${x}</div>`).join(''):'<div class="tip good">✓ Strong basic resume structure. Keep tailoring keywords to each job.</div>';
+}
+function matchJob(){
+ let job=val('job').toLowerCase(), r=resumeText().toLowerCase();
+ let words=(job.match(/[a-z][a-z+#.-]{2,}/g)||[]).filter(w=>!['the','and','for','with','you','our','are','this','that','from','will','have','your','into','looking','role','work','using','should','about','they','their','what','who','can','all','job','skills','experience'].includes(w));
+ let uniq=[...new Set(words)], found=uniq.filter(w=>r.includes(w)), missing=uniq.filter(w=>!r.includes(w)).slice(0,12);
+ let pct=uniq.length?Math.round(found.length/uniq.length*100):0;
+ document.getElementById('matchScore').textContent=pct+'%';document.getElementById('matchBar').style.width=pct+'%';
+ document.getElementById('keywords').innerHTML=found.slice(0,18).map(w=>`<span style="display:inline-block;padding:6px 9px;background:#eaf8ef;border-radius:8px;margin:4px;color:#16733a">${esc(w)}</span>`).join('')||'No matching keywords yet.';
+ document.getElementById('matchTips').innerHTML=missing.length?missing.map(w=>`<div class="tip">Consider adding relevant keyword: <b>${esc(w)}</b> (only if you genuinely have that skill).</div>`).join(''):'<div class="tip good">Most detected keywords are already represented.</div>';
+}
+function clearAll(){ids.forEach(i=>document.getElementById(i).value='');updatePreview();document.getElementById('atsScore').textContent='0';document.getElementById('atsBar').style.width='0'}
+ids.forEach(i=>document.getElementById(i).addEventListener('input',updatePreview));updatePreview();
+</script>
+</body>
+</html>
